@@ -544,4 +544,20 @@ object ci extends Module {
     val destDir = os.Path(directory, os.pwd)
     os.copy(orig, destDir / distName, createFolders = true, replaceExisting = true)
   }
+
+  def dummy() = T.command {}
+
+  def debugFindMsm() = T.command {
+    val baseDir = os.Path("""C:\Program Files (x86)\Microsoft Visual Studio""")
+    os.walk(baseDir)
+      .filter(_.last.toLowerCase(java.util.Locale.ROOT).endsWith(".msm"))
+      .foreach(println(_))
+    os.walk(baseDir)
+      .filter(_.last.toLowerCase(java.util.Locale.ROOT).contains("mergemodules"))
+      .foreach { dir =>
+        println(s"-> $dir")
+        os.walk(dir).filter(os.isFile(_)).foreach(println(_))
+        println()
+      }
+  }
 }

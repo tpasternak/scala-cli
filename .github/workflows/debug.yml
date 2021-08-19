@@ -1,0 +1,20 @@
+name: debug
+on:
+  push:
+    branches:
+    - debug
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: windows-2016
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: coursier/cache-action@v6.3
+    - uses: coursier/setup-action@v1.1.1
+      with:
+        jvm: 8
+    - run: ./mill -i ci.debugFindMsm
