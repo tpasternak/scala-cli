@@ -549,11 +549,12 @@ object ci extends Module {
 
   def debugFindMsm() = T.command {
     val baseDir = os.Path("""C:\Program Files (x86)\Microsoft Visual Studio""")
-    os.walk(baseDir)
+    os.walk.stream(baseDir)
       .filter(_.last.toLowerCase(java.util.Locale.ROOT).endsWith(".msm"))
       .foreach(println(_))
-    os.walk(baseDir)
+    os.walk.stream(baseDir)
       .filter(_.last.toLowerCase(java.util.Locale.ROOT).contains("mergemodules"))
+      .filter(os.isDir(_))
       .foreach { dir =>
         println(s"-> $dir")
         os.walk(dir).filter(os.isFile(_)).foreach(println(_))
