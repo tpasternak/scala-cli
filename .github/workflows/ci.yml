@@ -208,7 +208,6 @@ jobs:
         retention-days: 2
 
   publish:
-    needs: [jvm-tests, format, checks, reference-doc]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
