@@ -9,7 +9,7 @@ import dependency.parser.DependencyParser
 import java.io.{ByteArrayOutputStream, File, InputStream}
 
 import scala.build.blooprifle.BloopRifleConfig
-import scala.build.internal.{CodeWrapper, Constants, CustomCodeClassWrapper}
+import scala.build.internal.Constants
 import scala.build.options._
 import scala.build.{Inputs, LocalRepo, Logger, Os}
 import scala.util.Properties
@@ -107,10 +107,6 @@ final case class SharedOptions(
 
   def logger = logging.logger
 
-  private def codeWrapper: Option[CodeWrapper] =
-    if (classWrap) Some(CustomCodeClassWrapper)
-    else None
-
   private def parseDependencies(deps: List[String], ignoreErrors: Boolean): Seq[AnyDependency] =
     deps.map(_.trim).filter(_.nonEmpty)
       .flatMap { depStr =>
@@ -137,7 +133,7 @@ final case class SharedOptions(
         compilerPlugins = parseDependencies(dependencies.compilerPlugin, ignoreErrors)
       ),
       scriptOptions = ScriptOptions(
-        codeWrapper = codeWrapper
+        codeWrapper = None
       ),
       scalaJsOptions = js.buildOptions,
       scalaNativeOptions = native.buildOptions,

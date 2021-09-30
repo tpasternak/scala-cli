@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets
 
 import scala.build.EitherCps.{either, value}
 import scala.build.errors.BuildException
-import scala.build.internal.{AmmUtil, CodeWrapper}
+import scala.build.internal.{AmmUtil, CodeWrapper, CustomCodeWrapper, Name}
 import scala.build.options.{BuildOptions, BuildRequirements}
 import scala.build.{Inputs, Os}
 import scala.util.matching.Regex
@@ -112,9 +112,8 @@ object ScriptPreprocessor {
       Some(options),
       Some(requirements),
       scopedRequirements,
-      Some(className),
+      Some(CustomCodeWrapper.mainClassObject(Name(className)).backticked),
       scopePath
     )
   }
-
 }

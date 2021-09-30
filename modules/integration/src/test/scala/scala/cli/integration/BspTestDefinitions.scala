@@ -713,6 +713,32 @@ abstract class BspTestDefinitions(val scalaVersionOpt: Option[String])
       }
     }
   }
+
+  test("interconnection between scripts".only) {
+    val inputs = TestInputs(
+      Seq(
+        os.rel / "f.sc"     -> "def f(x: String) = println(x + x + x)",
+        os.rel / "main0.sc" -> "f.f(args(0))"
+      )
+    )
+    inputs.fromRoot { root =>
+      val p =
+        os.proc(TestUtil.cli, "main0.sc", "f.sc", "--", "20").call(cwd = root, stdout = os.Pipe)
+      val res = p.out.text.trim
+      expect(res == "202020")
+    }
+  }
+  test("CLI args passed to script") {
+    val inputs = TestInputs(
+      Seq(
+        os.rel / "f.sc" -> "println(args(0))"
+      )
+    )
+    inputs.fromRoot { root =>
+      val p = os.proc(TestUtil.cli, "f.sc", "--", "16").call(cwd = root, stdout = os.Pipe)
+      expect(p.out.text.trim == "16")
+    }
+  }
 }
 
 object BspTestDefinitions {
