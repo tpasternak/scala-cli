@@ -24,7 +24,7 @@ case object CustomCodeWrapper extends CodeWrapper {
                              |  }
                              |  def main(args: Array[String]): Unit = {
                              |    setArgs(args)
-                             |    ${indexedWrapperName.raw}
+                             |    _root_.foo__.${indexedWrapperName.raw}
                              |  }
                              |}
                              |""".stripMargin
@@ -35,8 +35,9 @@ case object CustomCodeWrapper extends CodeWrapper {
     // indentation is important in the generated code, so we don't want scalafmt to touch that
     // format: off
     val top = AmmUtil.normalizeNewlines(s"""$packageDirective
-                                           |object ${indexedWrapperName.backticked}{\n
-                                           |""".stripMargin
+                                            |package foo__
+                                            |object ${indexedWrapperName.backticked}{\n
+                                            |""".stripMargin
     )
     val bottom = AmmUtil.normalizeNewlines(s"""\ndef args = ${name}.args
   $extraCode
