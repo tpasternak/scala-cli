@@ -114,12 +114,13 @@ object ScriptPreprocessor {
       Some(options),
       Some(requirements),
       scopedRequirements,
-      Some("foo__." ++ CustomCodeWrapper.mainClassObject(Name(className)).backticked),
+      Some(CustomCodeWrapper.mainClassObject(Name(className)).backticked),
       scopePath
     )
     val name = className + "_sc"
 
-val mainObjectCode = s"""|package foo__
+val mainObjectCode = s"""|
+                         |
                          |object ${name} {
                          |  private var argsOpt0 = Option.empty[Seq[String]]
                          |  def setArgs(args: Seq[String]): Unit = {
@@ -131,7 +132,7 @@ val mainObjectCode = s"""|package foo__
                          |  }
                          |  def main(args: Array[String]): Unit = {
                          |    setArgs(args)
-                         |    _root_.foo__.${className}
+                         |    new ${className}_trait(){}
                          |  }
                          |}
                          |""".stripMargin
@@ -143,7 +144,7 @@ val mainObjectCode = s"""|package foo__
       Some(options),
       Some(requirements),
       scopedRequirements,
-      Some("foo__." ++ CustomCodeWrapper.mainClassObject(Name(className)).backticked),
+      Some(CustomCodeWrapper.mainClassObject(Name(className)).backticked),
       scopePath
     )
 

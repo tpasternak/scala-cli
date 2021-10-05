@@ -20,13 +20,13 @@ case object CustomCodeWrapper extends CodeWrapper {
     // indentation is important in the generated code, so we don't want scalafmt to touch that
     // format: off
     val top = AmmUtil.normalizeNewlines(s"""$packageDirective
-                                            |package foo__
-                                            |object ${indexedWrapperName.backticked}{\n
+                                            |
+                                            |trait ${indexedWrapperName.backticked}_trait {\n
                                             |""".stripMargin
     )
-    val bottom = AmmUtil.normalizeNewlines(s"""\ndef args = ${name}.args
+    val bottom = AmmUtil.normalizeNewlines(s"""\ndef args = ${name}.args\n
   $extraCode
-}
+}\n object ${indexedWrapperName.backticked} extends ${indexedWrapperName.backticked}_trait
 
 """)
     // format: on
