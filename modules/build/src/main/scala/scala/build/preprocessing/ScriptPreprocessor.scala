@@ -103,7 +103,7 @@ object ScriptPreprocessor {
 
     val className = (pkg :+ wrapper).map(_.raw).mkString(".")
 //    pprint.pprintln(code)
-    val relPath = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}.scala"
+    val relPath  = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}.scala"
     val relPath2 = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}_sc.scala"
 
     val file1 = PreprocessedSource.InMemory(
@@ -117,38 +117,6 @@ object ScriptPreprocessor {
       Some(CustomCodeWrapper.mainClassObject(Name(className)).backticked),
       scopePath
     )
-    val name = className + "_sc"
-
-val mainObjectCode = s"""|
-                         |
-                         |object ${name} {
-                         |  private var argsOpt0 = Option.empty[Seq[String]]
-                         |  def setArgs(args: Seq[String]): Unit = {
-                         |    argsOpt0 = Some(args)
-                         |  }
-                         |  def argsOpt: Option[Seq[String]] = argsOpt0
-                         |  def args: Seq[String] = argsOpt.getOrElse {
-                         |    sys.error("No arguments passed to this script")
-                         |  }
-                         |  def main(args: Array[String]): Unit = {
-                         |    setArgs(args)
-                         |    new ${className}_trait(){}
-                         |  }
-                         |}
-                         |""".stripMargin
-    val file2 = PreprocessedSource.InMemory(
-      reportingPath,
-      relPath2,
-      mainObjectCode,
-      topWrapperLen,
-      Some(options),
-      Some(requirements),
-      scopedRequirements,
-      Some(CustomCodeWrapper.mainClassObject(Name(className)).backticked),
-      scopePath
-    )
-
-
-    List(file1, file2)
+    List(file1)
   }
 }
