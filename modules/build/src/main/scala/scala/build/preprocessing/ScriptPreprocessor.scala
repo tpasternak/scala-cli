@@ -103,8 +103,7 @@ object ScriptPreprocessor {
 
     val className = (pkg :+ wrapper).map(_.raw).mkString(".")
 //    pprint.pprintln(code)
-    val relPath  = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}.scala"
-    val relPath2 = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}_sc.scala"
+    val relPath = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}.scala"
 
     val file1 = PreprocessedSource.InMemory(
       reportingPath,
