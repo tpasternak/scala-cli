@@ -83,7 +83,6 @@ case object ScalaPreprocessor extends Preprocessor {
       case v: Inputs.VirtualScalaFile =>
         val res = either {
           val content = new String(v.content, StandardCharsets.UTF_8)
-          pprint.pprintln(content)
           val (requirements, scopedRequirements, options, updatedContentOpt) =
             value(process(content, v.source, v.scopePath / os.up))
               .getOrElse((BuildRequirements(), Nil, BuildOptions(), None))

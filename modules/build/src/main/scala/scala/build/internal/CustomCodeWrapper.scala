@@ -12,11 +12,11 @@ case object CustomCodeWrapper extends CodeWrapper {
     indexedWrapperName: Name,
     extraCode: String
   ) = {
-    val name = mainClassObject(indexedWrapperName).backticked
-
+    val name      = mainClassObject(indexedWrapperName).backticked
+    val traitName = Name(s"${indexedWrapperName.raw}_trait").backticked
     val mainObjectCode = s"""|
                              |object ${name} {
-                             |  class MainClassRunner extends ${indexedWrapperName.backticked}_trait{}
+                             |  class MainClassRunner extends ${traitName} {}
                              |  private var argsOpt0 = Option.empty[Seq[String]]
                              |  def setArgs(args: Seq[String]): Unit = {
                              |    argsOpt0 = Some(args)
@@ -39,12 +39,12 @@ case object CustomCodeWrapper extends CodeWrapper {
     // format: off
     val top = AmmUtil.normalizeNewlines(s"""$packageDirective
                                             |
-                                            |trait ${indexedWrapperName.backticked}_trait {\n
+                                            |trait ${traitName} {\n
                                             |""".stripMargin
     )
     val bottom = AmmUtil.normalizeNewlines(s"""\ndef args = ${name}.args\n
   $extraCode
-}\n object ${indexedWrapperName.backticked} extends ${indexedWrapperName.backticked}_trait
+}\n object ${indexedWrapperName.backticked} extends ${traitName}
 
 $mainObjectCode
 """)
