@@ -714,7 +714,7 @@ abstract class BspTestDefinitions(val scalaVersionOpt: Option[String])
     }
   }
 
-  test("interconnection between scripts".only) {
+  test("interconnection between scripts") {
     val inputs = TestInputs(
       Seq(
         os.rel / "f.sc"     -> "def f(x: String) = println(x + x + x)",

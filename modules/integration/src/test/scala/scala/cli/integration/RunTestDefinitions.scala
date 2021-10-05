@@ -339,7 +339,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
 
   test("sub-directory") {
     val fileName          = "script.sc"
-    val expectedClassName = fileName.stripSuffix(".sc") + "$"
+    val expectedClassName = fileName.stripSuffix(".sc")+ "_sc" + "$MainClassRunner"
     val scriptPath        = os.rel / "something" / fileName
     val inputs = TestInputs(
       Seq(

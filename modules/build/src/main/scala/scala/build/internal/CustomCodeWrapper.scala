@@ -15,8 +15,8 @@ case object CustomCodeWrapper extends CodeWrapper {
     val name = mainClassObject(indexedWrapperName).backticked
 
     val mainObjectCode = s"""|
-                             |
                              |object ${name} {
+                             |  class MainClassRunner extends ${indexedWrapperName.backticked}_trait{}
                              |  private var argsOpt0 = Option.empty[Seq[String]]
                              |  def setArgs(args: Seq[String]): Unit = {
                              |    argsOpt0 = Some(args)
@@ -27,7 +27,7 @@ case object CustomCodeWrapper extends CodeWrapper {
                              |  }
                              |  def main(args: Array[String]): Unit = {
                              |    setArgs(args)
-                             |    new ${indexedWrapperName.backticked}_trait(){}
+                             |    new MainClassRunner()
                              |  }
                              |}
                              |""".stripMargin
