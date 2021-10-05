@@ -25,7 +25,7 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
     )
     val launcherName = {
       val ext = if (Properties.isWin) ".bat" else ""
-      fileName.stripSuffix(".sc") + ext
+      fileName.stripSuffix(".sc") + "_sc" + ext
     }
     inputs.fromRoot { root =>
       os.proc(TestUtil.cli, "package", extraOptions, fileName).call(
@@ -35,6 +35,7 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
       )
 
       val launcher = root / launcherName
+
       expect(os.isFile(launcher))
       expect(Files.isExecutable(launcher.toNIO))
 
@@ -63,7 +64,6 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
 
       val outputName = if (Properties.isWin) "app.bat" else "app"
       val launcher   = root / outputName
-
       expect(os.isFile(launcher))
       expect(Files.isExecutable(launcher.toNIO))
 
@@ -85,7 +85,7 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
              |""".stripMargin
       )
     )
-    val destName = fileName.stripSuffix(".sc") + ".js"
+    val destName = fileName.stripSuffix(".sc") + "_sc.js"
     inputs.fromRoot { root =>
       os.proc(TestUtil.cli, "package", extraOptions, fileName, "--js").call(
         cwd = root,
@@ -125,7 +125,7 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
     )
     val destName = {
       val ext = if (Properties.isWin) ".exe" else ""
-      fileName.stripSuffix(".sc") + ext
+      fileName.stripSuffix(".sc") + "_sc" + ext
     }
     inputs.fromRoot { root =>
       os.proc(TestUtil.cli, "package", extraOptions, fileName, "--native").call(
@@ -162,7 +162,7 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
              |""".stripMargin
       )
     )
-    val launcherName = fileName.stripSuffix(".sc") + ".jar"
+    val launcherName = fileName.stripSuffix(".sc") + "_sc.jar"
     inputs.fromRoot { root =>
       os.proc(TestUtil.cli, "package", extraOptions, "--assembly", fileName).call(
         cwd = root,
