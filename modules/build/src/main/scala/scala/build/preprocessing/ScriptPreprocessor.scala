@@ -30,7 +30,7 @@ final case class ScriptPreprocessor(codeWrapper: CodeWrapper) extends Preprocess
               PreprocessedSource.ScopePath.fromPath(script.path)
             )
           }
-          Seq(preprocessed)
+          preprocessed
         }
         Some(res)
 
@@ -48,7 +48,7 @@ final case class ScriptPreprocessor(codeWrapper: CodeWrapper) extends Preprocess
               script.scopePath
             )
           }
-          Seq(preprocessed)
+          preprocessed
         }
         Some(res)
 
@@ -85,7 +85,7 @@ object ScriptPreprocessor {
     codeWrapper: CodeWrapper,
     subPath: os.SubPath,
     scopePath: PreprocessedSource.ScopePath
-  ): Either[BuildException, PreprocessedSource.InMemory] = either {
+  ): Either[BuildException, List[PreprocessedSource.InMemory]] = either {
 
     val contentIgnoredSheBangLines = ignoreSheBangLines(content)
 
@@ -102,9 +102,11 @@ object ScriptPreprocessor {
     )
 
     val className = (pkg :+ wrapper).map(_.raw).mkString(".")
-    pprint.pprintln(code)
+//    pprint.pprintln(code)
     val relPath = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}.scala"
-    PreprocessedSource.InMemory(
+    val relPath2 = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}_sc.scala"
+
+    val file1 = PreprocessedSource.InMemory(
       reportingPath,
       relPath,
       code,
@@ -115,5 +117,37 @@ object ScriptPreprocessor {
       Some("foo__." ++ CustomCodeWrapper.mainClassObject(Name(className)).backticked),
       scopePath
     )
+    val name = className + "_sc"
+
+val mainObjectCode = s"""|package foo__
+                         |object ${name} {
+                         |  private var argsOpt0 = Option.empty[Seq[String]]
+                         |  def setArgs(args: Seq[String]): Unit = {
+                         |    argsOpt0 = Some(args)
+                         |  }
+                         |  def argsOpt: Option[Seq[String]] = argsOpt0
+                         |  def args: Seq[String] = argsOpt.getOrElse {
+                         |    sys.error("No arguments passed to this script")
+                         |  }
+                         |  def main(args: Array[String]): Unit = {
+                         |    setArgs(args)
+                         |    _root_.foo__.${className}
+                         |  }
+                         |}
+                         |""".stripMargin
+    val file2 = PreprocessedSource.InMemory(
+      reportingPath,
+      relPath2,
+      mainObjectCode,
+      topWrapperLen,
+      Some(options),
+      Some(requirements),
+      scopedRequirements,
+      Some("foo__." ++ CustomCodeWrapper.mainClassObject(Name(className)).backticked),
+      scopePath
+    )
+
+
+    List(file1, file2)
   }
 }

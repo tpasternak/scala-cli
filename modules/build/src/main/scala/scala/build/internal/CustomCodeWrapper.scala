@@ -13,21 +13,6 @@ case object CustomCodeWrapper extends CodeWrapper {
     extraCode: String
   ) = {
     val name = mainClassObject(indexedWrapperName).backticked
-    val mainObjectCode = s"""|object ${name} {
-                             |  private var argsOpt0 = Option.empty[Seq[String]]
-                             |  def setArgs(args: Seq[String]): Unit = {
-                             |    argsOpt0 = Some(args)
-                             |  }
-                             |  def argsOpt: Option[Seq[String]] = argsOpt0
-                             |  def args: Seq[String] = argsOpt.getOrElse {
-                             |    sys.error("No arguments passed to this script")
-                             |  }
-                             |  def main(args: Array[String]): Unit = {
-                             |    setArgs(args)
-                             |    _root_.foo__.${indexedWrapperName.raw}
-                             |  }
-                             |}
-                             |""".stripMargin
 
     val packageDirective =
       if (pkgName.isEmpty) "" else s"package ${AmmUtil.encodeScalaSourcePath(pkgName)}" + "\n"
@@ -42,7 +27,7 @@ case object CustomCodeWrapper extends CodeWrapper {
     val bottom = AmmUtil.normalizeNewlines(s"""\ndef args = ${name}.args
   $extraCode
 }
-$mainObjectCode
+
 """)
     // format: on
 
