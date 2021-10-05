@@ -118,7 +118,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
     }
   }
 
-  if (TestUtil.canRunNative && actualScalaVersion.startsWith("2."))
+  if (TestUtil.canRunNative && actualScalaVersion.startsWith("2.13"))
     test("simple script native") {
       simpleNativeTests()
     }
@@ -193,7 +193,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
     }
   }
 
-  if (TestUtil.canRunNative && actualScalaVersion.startsWith("2."))
+  if (TestUtil.canRunNative && actualScalaVersion.startsWith("2.13"))
     test("Multiple scripts native") {
       multipleScriptsNative()
     }
@@ -335,7 +335,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
     }
   }
 
-  if (TestUtil.canRunNative && actualScalaVersion.startsWith("2."))
+  if (TestUtil.canRunNative && actualScalaVersion.startsWith("2.13"))
     test("Directory native") {
       directoryNative()
     }
