@@ -335,6 +335,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
     }
   }
 
+  // TODO: make nice messages that the scenario is unsupported with 2.12
   if (TestUtil.canRunNative && actualScalaVersion.startsWith("2.13"))
     test("Directory native") {
       directoryNative()
