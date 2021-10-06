@@ -556,19 +556,20 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
         .map(stripAnsi)
         .dropWhile(!_.startsWith("Exception in thread "))
       val tab = "\t"
-      val expectedLines =s"""Exception in thread "main" java.lang.Exception: Caught exception during processing
-                            |${tab}at throws_trait.$$init$$(throws.sc:8)
-                            |${tab}at throws_sc$$MainClassRunner.<init>(throws.sc:19)
-                            |${tab}at throws_sc$$.main(throws.sc:30)
-                            |${tab}at throws_sc.main(throws.sc)
-                            |Caused by: java.lang.RuntimeException: nope
-                            |${tab}at scala.sys.package$$.error(package.scala:27)
-                            |${tab}at throws_trait.something(throws.sc:3)
-                            |${tab}at throws_trait.something$$(throws.sc:65534)
-                            |${tab}at throws_sc$$MainClassRunner.something(throws.sc:19)
-                            |${tab}at throws_trait.$$init$$(throws.sc:5)
-                            |${tab}... 3 more
-                            |""".stripMargin.linesIterator.toVector
+      val expectedLines =
+        s"""Exception in thread "main" java.lang.Exception: Caught exception during processing
+           |${tab}at throws_trait.$$init$$(throws.sc:8)
+           |${tab}at throws_sc$$MainClassRunner.<init>(throws.sc:19)
+           |${tab}at throws_sc$$.main(throws.sc:30)
+           |${tab}at throws_sc.main(throws.sc)
+           |Caused by: java.lang.RuntimeException: nope
+           |${tab}at scala.sys.package$$.error(package.scala:27)
+           |${tab}at throws_trait.something(throws.sc:3)
+           |${tab}at throws_trait.something$$(throws.sc:65534)
+           |${tab}at throws_sc$$MainClassRunner.something(throws.sc:19)
+           |${tab}at throws_trait.$$init$$(throws.sc:5)
+           |${tab}... 3 more
+           |""".stripMargin.linesIterator.toVector
       expect(exceptionLines == expectedLines)
     }
   }
