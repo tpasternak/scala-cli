@@ -10,7 +10,6 @@ object Runner {
 
     val loader = Thread.currentThread().getContextClassLoader
     val cls    = loader.loadClass(mainClass)
-//    println("RUNNING")
     val method = cls.getMethod("main", classOf[Array[String]])
     try method.invoke(null, args0)
     catch {

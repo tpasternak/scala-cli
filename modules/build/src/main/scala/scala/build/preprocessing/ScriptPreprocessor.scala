@@ -102,10 +102,9 @@ object ScriptPreprocessor {
     )
 
     val className = (pkg :+ wrapper).map(_.raw).mkString(".")
-//    pprint.pprintln(code)
     val relPath = os.rel / (subPath / os.up) / s"${subPath.last.stripSuffix(".sc")}.scala"
 
-    val file1 = PreprocessedSource.InMemory(
+    val file = PreprocessedSource.InMemory(
       reportingPath,
       relPath,
       code,
@@ -116,6 +115,7 @@ object ScriptPreprocessor {
       Some(CustomCodeWrapper.mainClassObject(Name(className)).backticked),
       scopePath
     )
-    List(file1)
+    List(file)
   }
+
 }
