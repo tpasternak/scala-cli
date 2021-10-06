@@ -11,14 +11,13 @@ import java.util.concurrent.{ScheduledExecutorService, ScheduledFuture}
 import scala.build.EitherCps.{either, value}
 import scala.build.Ops._
 import scala.build.blooprifle.BloopRifleConfig
-import scala.build.errors.{BuildException, CompositeBuildException}
+import scala.build.errors.{BuildException, CompositeBuildException, ScalaNativeCompatibilityError}
 import scala.build.internal.{Constants, CustomCodeWrapper, MainClass, Util}
 import scala.build.options.BuildOptions
 import scala.build.postprocessing._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.DurationInt
 import scala.util.control.NonFatal
-import scala.build.errors.ScalaNativeCompatibilityError
 
 trait Build {
   def inputs: Inputs
