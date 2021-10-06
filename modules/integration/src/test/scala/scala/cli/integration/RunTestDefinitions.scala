@@ -122,6 +122,25 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
     test("simple script native") {
       simpleNativeTests()
     }
+  else {
+
+    test("Descriptive error message for unsupported native/script configurations".only) {
+      val inputs = TestInputs(
+        Seq(
+          os.rel / "a.sc" -> "println(1)"
+        )
+      )
+      inputs.fromRoot { root =>
+        val output = os.proc(TestUtil.cli, extraOptions, "--native", "a.sc").call(
+          cwd =
+            root,
+          check = false,
+          stderr = os.Pipe
+        ).err.text.trim
+        expect(output.startsWith("scala-cli: invalid option:"))
+      }
+    }
+  }
 
   test("Multiple scripts") {
     val message = "Hello"

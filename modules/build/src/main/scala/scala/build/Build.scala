@@ -18,6 +18,7 @@ import scala.build.postprocessing._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.DurationInt
 import scala.util.control.NonFatal
+import scala.build.errors.ScalaNativeCompatibilityError
 
 trait Build {
   def inputs: Inputs
@@ -203,6 +204,16 @@ object Build {
   def classesDir(root: os.Path, projectName: String): os.Path =
     root / ".scala" / projectName / "classes"
 
+  def scalaNativeSupported(options: BuildOptions, inputs: Inputs): Boolean = {
+    options.scalaOptions.scalaVersion match {
+      case None                            => false
+      case Some(v) if v.startsWith("3")    => false
+      case Some(v) if v.startsWith("2.13") => true
+      case Some(v) if v.startsWith("2.12") =>
+        !inputs.sourceFiles().exists(_.isInstanceOf[Inputs.ScriptBase])
+    }
+  }
+
   def build(
     inputs: Inputs,
     options: BuildOptions,
@@ -211,30 +222,33 @@ object Build {
     logger: Logger,
     crossBuilds: Boolean
   ): Either[BuildException, (Build, Seq[Build])] = {
-
-    val buildClient = BloopBuildClient.create(
-      logger,
-      keepDiagnostics = options.internal.keepDiagnostics
-    )
-    val classesDir0 = classesDir(inputs.workspace, inputs.projectName)
-    bloop.BloopServer.withBuildServer(
-      bloopConfig,
-      "scala-cli",
-      Constants.version,
-      inputs.workspace.toNIO,
-      classesDir0.toNIO,
-      buildClient,
-      threads.bloop,
-      logger.bloopRifleLogger
-    ) { bloopServer =>
-      build(
-        inputs = inputs,
-        options = options,
-        logger = logger,
-        buildClient = buildClient,
-        bloopServer = bloopServer,
-        crossBuilds = crossBuilds
+    if (options.scalaNativeOptions.enable && !scalaNativeSupported(options, inputs))
+      Left(ScalaNativeCompatibilityError)
+    else {
+      val buildClient = BloopBuildClient.create(
+        logger,
+        keepDiagnostics = options.internal.keepDiagnostics
       )
+      val classesDir0 = classesDir(inputs.workspace, inputs.projectName)
+      bloop.BloopServer.withBuildServer(
+        bloopConfig,
+        "scala-cli",
+        Constants.version,
+        inputs.workspace.toNIO,
+        classesDir0.toNIO,
+        buildClient,
+        threads.bloop,
+        logger.bloopRifleLogger
+      ) { bloopServer =>
+        build(
+          inputs = inputs,
+          options = options,
+          logger = logger,
+          buildClient = buildClient,
+          bloopServer = bloopServer,
+          crossBuilds = crossBuilds
+        )
+      }
     }
   }
 
