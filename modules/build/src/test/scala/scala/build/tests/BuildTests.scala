@@ -143,7 +143,7 @@ class BuildTests extends munit.FunSuite {
         generateSemanticDbs = Some(true)
       )
     )
-    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       val build = maybeBuild.orThrow
       build.assertGeneratedEquals(
         "simple.class",
@@ -173,7 +173,7 @@ class BuildTests extends munit.FunSuite {
           |""".stripMargin
     )
     testInputs.withBuild(defaultOptions.enableJs, buildThreads, bloopConfig) {
-      (root, inputs, maybeBuild) =>
+      (_, _, maybeBuild) =>
         maybeBuild.orThrow.assertGeneratedEquals(
           "simple.class",
           "simple_sc$MainClassRunner.sjsir",
@@ -199,7 +199,7 @@ class BuildTests extends munit.FunSuite {
           |""".stripMargin
     )
     testInputs.withBuild(defaultOptions.enableNative, buildThreads, bloopConfig) {
-      (root, inputs, maybeBuild) =>
+      (_, _, maybeBuild) =>
         maybeBuild.orThrow.assertGeneratedEquals(
           "simple_trait.nir",
           "simple.class",
@@ -230,7 +230,7 @@ class BuildTests extends munit.FunSuite {
           |println(g.mkString)
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
         "simple_sc.class",
@@ -250,7 +250,7 @@ class BuildTests extends munit.FunSuite {
           |println(g.mkString)
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
         "simple_sc.class",
@@ -270,7 +270,7 @@ class BuildTests extends munit.FunSuite {
           |println(g.mkString)
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
         "simple_sc.class",
@@ -292,7 +292,7 @@ class BuildTests extends munit.FunSuite {
           |pprint.log(g)
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
         "simple_sc.class",
@@ -314,7 +314,7 @@ class BuildTests extends munit.FunSuite {
           |pprint.log(g)
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
         "simple_sc.class",
@@ -339,7 +339,7 @@ class BuildTests extends munit.FunSuite {
         keepDiagnostics = true
       )
     )
-    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (root, _, maybeBuild) =>
       val expectedDiag = {
         val start = new bsp4j.Position(2, 0)
         val end   = new bsp4j.Position(2, 2)
@@ -368,7 +368,7 @@ class BuildTests extends munit.FunSuite {
         keepDiagnostics = true
       )
     )
-    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (root, _, maybeBuild) =>
       val expectedDiag = {
         val start = new bsp4j.Position(2, 0)
         val end   = new bsp4j.Position(2, 0) // would have expected (2, 2) here :|
@@ -399,7 +399,7 @@ class BuildTests extends munit.FunSuite {
           |}
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "Simple.class",
         "Simple$.class"
@@ -421,7 +421,7 @@ class BuildTests extends munit.FunSuite {
           |}
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "Simple.class",
         "Simple$.class"
@@ -451,7 +451,7 @@ class BuildTests extends munit.FunSuite {
           |""".stripMargin
     )
     val options = defaultOptions.enableJs
-    testInputs.withBuild(options, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(options, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "Simple.class",
         "Simple$.class",
@@ -476,7 +476,7 @@ class BuildTests extends munit.FunSuite {
           |}
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "Simple.class",
         "Simple$.class"
@@ -498,7 +498,7 @@ class BuildTests extends munit.FunSuite {
           |}
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "Simple.class",
         "Simple$.class"
@@ -516,7 +516,7 @@ class BuildTests extends munit.FunSuite {
           |}
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       val sources = maybeBuild.toOption.get.sources
       expect(sources.inMemory.isEmpty)
       expect(sources.paths.lengthCompare(1) == 0)
