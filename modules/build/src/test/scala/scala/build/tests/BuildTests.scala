@@ -53,13 +53,15 @@ class BuildTests extends munit.FunSuite {
           |println(s"n=$n")
           |""".stripMargin
     )
-    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       if (checkResults) {
         maybeBuild.orThrow.assertGeneratedEquals(
           "simple.class",
-          "simple$.class",
           "simple_sc.class",
-          "simple_sc$.class"
+          "simple_sc$MainClassRunner.class",
+          "simple$.class",
+          "simple_sc$.class",
+          "simple_trait.class"
         )
       }
     }
@@ -82,14 +84,17 @@ class BuildTests extends munit.FunSuite {
           |""".stripMargin
     )
     testInputs.withBuild(defaultScala3Options, buildThreads, bloopConfig) {
-      (root, inputs, maybeBuild) =>
+      (_, _, maybeBuild) =>
         maybeBuild.orThrow.assertGeneratedEquals(
           "simple.class",
+          "simple_sc.class",
+          "simple_sc$MainClassRunner.class",
+          "simple_trait.tasty",
+          "simple_sc.tasty",
           "simple$.class",
           "simple.tasty",
-          "simple_sc.class",
           "simple_sc$.class",
-          "simple_sc.tasty"
+          "simple_trait.class"
         )
     }
   }
@@ -106,14 +111,16 @@ class BuildTests extends munit.FunSuite {
         generateSemanticDbs = Some(true)
       )
     )
-    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
+    testInputs.withBuild(buildOptions, buildThreads, bloopConfig) { (_, _, maybeBuild) =>
       val build = maybeBuild.orThrow
       build.assertGeneratedEquals(
         "simple.class",
-        "simple$.class",
         "simple_sc.class",
+        "simple_sc$MainClassRunner.class",
+        "simple$.class",
         "simple_sc$.class",
-        "META-INF/semanticdb/simple.sc.semanticdb"
+        "META-INF/semanticdb/simple.sc.semanticdb",
+        "simple_trait.class"
       )
 
       val outputDir = build.outputOpt.getOrElse(sys.error("no build output???"))
@@ -140,12 +147,15 @@ class BuildTests extends munit.FunSuite {
       val build = maybeBuild.orThrow
       build.assertGeneratedEquals(
         "simple.class",
+        "simple_sc.class",
+        "simple_sc$MainClassRunner.class",
+        "simple_trait.tasty",
+        "simple_sc.tasty",
         "simple$.class",
         "simple.tasty",
-        "simple_sc.class",
         "simple_sc$.class",
-        "simple_sc.tasty",
-        "META-INF/semanticdb/simple.sc.semanticdb"
+        "META-INF/semanticdb/simple.sc.semanticdb",
+        "simple_trait.class"
       )
 
       val outputDir = build.outputOpt.getOrElse(sys.error("no build output???"))
@@ -166,12 +176,16 @@ class BuildTests extends munit.FunSuite {
       (root, inputs, maybeBuild) =>
         maybeBuild.orThrow.assertGeneratedEquals(
           "simple.class",
-          "simple$.class",
+          "simple_sc$MainClassRunner.sjsir",
+          "simple_sc.class",
+          "simple_sc$MainClassRunner.class",
+          "simple_trait.sjsir",
           "simple.sjsir",
           "simple$.sjsir",
-          "simple_sc.class",
-          "simple_sc$.class",
           "simple_sc.sjsir",
+          "simple$.class",
+          "simple_sc$.class",
+          "simple_trait.class",
           "simple_sc$.sjsir"
         )
     }
@@ -187,14 +201,18 @@ class BuildTests extends munit.FunSuite {
     testInputs.withBuild(defaultOptions.enableNative, buildThreads, bloopConfig) {
       (root, inputs, maybeBuild) =>
         maybeBuild.orThrow.assertGeneratedEquals(
+          "simple_trait.nir",
           "simple.class",
-          "simple$.class",
-          // "simple.nir", // not sure why Scala Native doesn't generate this one.
-          "simple$.nir",
           "simple_sc.class",
+          "simple_sc$MainClassRunner.class",
+          "simple$.nir",
+          "simple_sc$MainClassRunner.nir",
+          "simple$.class",
+          "simple_sc$$$Lambda$1.nir",
           "simple_sc$.class",
           "simple_sc$.nir",
-          "simple_sc$$$Lambda$1.nir"
+          "simple_trait.class"
+          // "simple.nir", // not sure why Scala Native doesn't generate this one.
         )
     }
   }
@@ -215,9 +233,11 @@ class BuildTests extends munit.FunSuite {
     testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
-        "simple$.class",
         "simple_sc.class",
-        "simple_sc$.class"
+        "simple_sc$MainClassRunner.class",
+        "simple$.class",
+        "simple_sc$.class",
+        "simple_trait.class"
       )
     }
   }
@@ -233,9 +253,11 @@ class BuildTests extends munit.FunSuite {
     testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
-        "simple$.class",
         "simple_sc.class",
-        "simple_sc$.class"
+        "simple_sc$MainClassRunner.class",
+        "simple$.class",
+        "simple_sc$.class",
+        "simple_trait.class"
       )
     }
   }
@@ -251,9 +273,11 @@ class BuildTests extends munit.FunSuite {
     testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
-        "simple$.class",
         "simple_sc.class",
-        "simple_sc$.class"
+        "simple_sc$MainClassRunner.class",
+        "simple$.class",
+        "simple_sc$.class",
+        "simple_trait.class"
       )
     }
   }
@@ -271,9 +295,11 @@ class BuildTests extends munit.FunSuite {
     testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
-        "simple$.class",
         "simple_sc.class",
-        "simple_sc$.class"
+        "simple_sc$MainClassRunner.class",
+        "simple$.class",
+        "simple_sc$.class",
+        "simple_trait.class"
       )
     }
   }
@@ -291,9 +317,11 @@ class BuildTests extends munit.FunSuite {
     testInputs.withBuild(defaultOptions, buildThreads, bloopConfig) { (root, inputs, maybeBuild) =>
       maybeBuild.orThrow.assertGeneratedEquals(
         "simple.class",
-        "simple$.class",
         "simple_sc.class",
-        "simple_sc$.class"
+        "simple_sc$MainClassRunner.class",
+        "simple$.class",
+        "simple_sc$.class",
+        "simple_trait.class"
       )
     }
   }

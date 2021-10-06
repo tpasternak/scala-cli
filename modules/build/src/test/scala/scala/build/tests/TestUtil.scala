@@ -20,7 +20,7 @@ object TestUtil {
     def assertGeneratedEquals(expected: String*): Unit = {
       val generated0 = generated()
       assert(
-        expected.toSet subsetOf generated0.map(_.toString).toSet, {
+        expected.toSet == generated0.map(_.toString).toSet, {
           pprint.log(generated0.map(_.toString))
           pprint.log(expected)
           ""
