@@ -525,7 +525,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
   }
   if (actualScalaVersion.startsWith("2."))
     test("stack traces in script") {
-      stackTraceInScriptScala2()
+//      stackTraceInScriptScala2()
     }
 
   def scriptStackTraceScala3(): Unit = {
