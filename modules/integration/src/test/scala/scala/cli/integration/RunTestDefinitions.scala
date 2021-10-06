@@ -556,7 +556,6 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
         .map(stripAnsi)
         .dropWhile(!_.startsWith("Exception in thread "))
       val tab = "\t"
-      // TODO it's strange that there's line number 66635 (2^16-1) here
       val expectedLines =
         s"""Exception in thread "main" java.lang.Exception: Caught exception during processing
            |${tab}at throws_trait.$$init$$(throws.sc:8)
@@ -566,7 +565,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
            |Caused by: java.lang.RuntimeException: nope
            |${tab}at scala.sys.package$$.error(package.scala:27)
            |${tab}at throws_trait.something(throws.sc:3)
-           |${tab}at throws_trait.something$$(throws.sc:65535)
+           |${tab}at throws_trait.something$$(throws.sc)
            |${tab}at throws_sc$$MainClassRunner.something(throws.sc:19)
            |${tab}at throws_trait.$$init$$(throws.sc:5)
            |${tab}... 3 more""".stripMargin.linesIterator.toVector
@@ -580,7 +579,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
   }
 
   if (actualScalaVersion.startsWith("3."))
-    test("stack traces in script in Scala 3".only) {
+    test("stack traces in script in Scala 3") {
       scriptStackTraceScala3()
     }
 
