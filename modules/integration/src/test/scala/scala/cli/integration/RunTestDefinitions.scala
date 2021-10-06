@@ -491,31 +491,31 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
       val tab            = "\t"
       val expectedLines =
         if (actualScalaVersion.startsWith("2.12."))
-          s"""Exception in thread "main" java.lang.ExceptionInInitializerError
-             |${tab}at throws.main(throws.sc)
-             |Caused by: java.lang.Exception: Caught exception during processing
-             |${tab}at throws$$.<init>(throws.sc:6)
-             |${tab}at throws$$.<clinit>(throws.sc)
-             |${tab}... 1 more
+          s"""Exception in thread "main" java.lang.Exception: Caught exception during processing
+             |${tab}at throws_trait.$$init$$(throws.sc:6)
+             |${tab}at throws_sc$$MainClassRunner.<init>(throws.sc:17)
+             |${tab}at throws_sc$$.main(throws.sc:28)
+             |${tab}at throws_sc.main(throws.sc)
              |Caused by: java.lang.RuntimeException: nope
              |${tab}at scala.sys.package$$.error(package.scala:30)
-             |${tab}at throws$$.something(throws.sc:2)
-             |${tab}at throws$$.<init>(throws.sc:3)
-             |${tab}... 2 more
-             |""".stripMargin.linesIterator.toVector
+             |${tab}at throws_trait.something(throws.sc:2)
+             |${tab}at throws_trait.something$$(throws.sc:1)
+             |${tab}at throws_sc$$MainClassRunner.something(throws.sc:17)
+             |${tab}at throws_trait.$$init$$(throws.sc:3)
+             |${tab}... 3 more""".stripMargin.linesIterator.toVector
         else
-          s"""Exception in thread "main" java.lang.ExceptionInInitializerError
-             |${tab}at throws.main(throws.sc)
-             |Caused by: java.lang.Exception: Caught exception during processing
-             |${tab}at throws$$.<clinit>(throws.sc:6)
-             |${tab}... 1 more
+          s"""Exception in thread "main" java.lang.Exception: Caught exception during processing
+             |${tab}at throws_trait.$$init$$(throws.sc:6)
+             |${tab}at throws_sc$$MainClassRunner.<init>(throws.sc:17)
+             |${tab}at throws_sc$$.main(throws.sc:28)
+             |${tab}at throws_sc.main(throws.sc)
              |Caused by: java.lang.RuntimeException: nope
              |${tab}at scala.sys.package$$.error(package.scala:27)
-             |${tab}at throws$$.something(throws.sc:2)
-             |${tab}at throws$$.<clinit>(throws.sc:3)
-             |${tab}... 1 more
-             |""".stripMargin.linesIterator.toVector
-
+             |${tab}at throws_trait.something(throws.sc:2)
+             |${tab}at throws_trait.something$$(throws.sc:1)
+             |${tab}at throws_sc$$MainClassRunner.something(throws.sc:17)
+             |${tab}at throws_trait.$$init$$(throws.sc:3)
+             |${tab}... 3 more""".stripMargin.linesIterator.toVector
       if (exceptionLines != expectedLines) {
         pprint.log(exceptionLines)
         pprint.log(expectedLines)
@@ -525,7 +525,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
   }
   if (actualScalaVersion.startsWith("2."))
     test("stack traces in script") {
-//      stackTraceInScriptScala2()
+      stackTraceInScriptScala2()
     }
 
   def scriptStackTraceScala3(): Unit = {
