@@ -143,7 +143,7 @@ abstract class PackageTestDefinitions(val scalaVersionOpt: Option[String])
     }
   }
 
-  if (!Properties.isWin && actualScalaVersion.startsWith("2."))
+  if (!Properties.isWin && actualScalaVersion.startsWith("2.13"))
     test("simple native") {
       simpleNativeTest()
     }

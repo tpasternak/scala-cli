@@ -515,6 +515,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
              |${tab}at throws$$.<clinit>(throws.sc:3)
              |${tab}... 1 more
              |""".stripMargin.linesIterator.toVector
+
       if (exceptionLines != expectedLines) {
         pprint.log(exceptionLines)
         pprint.log(expectedLines)
@@ -524,7 +525,7 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
   }
   if (actualScalaVersion.startsWith("2."))
     test("stack traces in script") {
-//      stackTraceInScriptScala2()
+      stackTraceInScriptScala2()
     }
 
   def scriptStackTraceScala3(): Unit = {
@@ -555,25 +556,26 @@ abstract class RunTestDefinitions(val scalaVersionOpt: Option[String])
         .map(stripAnsi)
         .dropWhile(!_.startsWith("Exception in thread "))
       val tab = "\t"
-      val expectedLines =
-        s"""Exception in thread "main" java.lang.ExceptionInInitializerError
-           |${tab}at throws.main(throws.sc)
-           |Caused by: java.lang.Exception: Caught exception during processing
-           |${tab}at throws$$.<clinit>(throws.sc:8)
-           |${tab}... 1 more
-           |Caused by: java.lang.RuntimeException: nope
-           |${tab}at scala.sys.package$$.error(package.scala:27)
-           |${tab}at throws$$.something(throws.sc:3)
-           |${tab}at throws$$.<clinit>(throws.sc:5)
-           |${tab}... 1 more
-           |""".stripMargin.linesIterator.toVector
+      val expectedLines =s"""Exception in thread "main" java.lang.Exception: Caught exception during processing
+                            |${tab}at throws_trait.$$init$$(throws.sc:8)
+                            |${tab}at throws_sc$$MainClassRunner.<init>(throws.sc:19)
+                            |${tab}at throws_sc$$.main(throws.sc:30)
+                            |${tab}at throws_sc.main(throws.sc)
+                            |Caused by: java.lang.RuntimeException: nope
+                            |${tab}at scala.sys.package$$.error(package.scala:27)
+                            |${tab}at throws_trait.something(throws.sc:3)
+                            |${tab}at throws_trait.something$$(throws.sc:65534)
+                            |${tab}at throws_sc$$MainClassRunner.something(throws.sc:19)
+                            |${tab}at throws_trait.$$init$$(throws.sc:5)
+                            |${tab}... 3 more
+                            |""".stripMargin.linesIterator.toVector
       expect(exceptionLines == expectedLines)
     }
   }
 
   if (actualScalaVersion.startsWith("3."))
     test("stack traces in script in Scala 3") {
-//      scriptStackTraceScala3()
+      scriptStackTraceScala3()
     }
 
   val emptyInputs = TestInputs(
