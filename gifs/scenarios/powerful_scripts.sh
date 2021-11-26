@@ -20,6 +20,7 @@ else
 
   # Put your stuff here
   cat <<EOF | updateFile stat.sc
+#!/usr/bin/env -S scala-cli shebang
 using lib "com.lihaoyi::os-lib:0.7.8"
 using lib "com.lihaoyi::pprint:0.6.6"
 import pprint._
@@ -32,7 +33,7 @@ EOF
   doSleep 3
   pe "chmod +x stat.sc"
   pe 'echo "Hello" > my_file'
-  pe "scala-cli ./stat.sc -- my_file"
+  pe "./stat.sc my_file"
   # Wait a bit to read output of last command
   doSleep 4
   echo " " && echo "ok" > status.txt
