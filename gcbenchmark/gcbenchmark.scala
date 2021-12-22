@@ -60,17 +60,20 @@ object Main {
         scalaCli,
         "compile",
         classes.map(c => c + ".scala")
-      ).call(cwd = workspace, env = env, stout = os.Inherit)
+      ).call(cwd = workspace, env = env, stdout = os.Inherit)
       val stop    = System.nanoTime()
       val elapsed = 1.0 * (stop - start) / 1000000000
       elapsed.seconds
     }
 
-    def bloopPid =          "(\\d+) bloop[.]Server".r
+    def bloopPid =  {
+      val processes = os.proc("jps", "-l").call().out.text()
+      "(\\d+) bloop[.]Server".r
           .findFirstMatchIn(processes)
           .get
           .group(1)
-          .toInt
+            .toInt
+    }
 
 
     val results = for { env <- setups } yield {
@@ -78,7 +81,7 @@ object Main {
       println("=" * 80)
       pprint.log(env)
       build(0, env)
-      val processes = os.proc("jps", "-l").call().out.text()
+
       pprint.log(bloopPid)
       val buildResults = (1 to numberOfBuilds).map { i =>
         val elapsed = build(i, env)
